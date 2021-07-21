@@ -1,13 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React,{useState} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import * as Font from 'expo-font'
+import AppLoading from 'expo-app-loading'
+import  {createStore, applyMiddleware} from 'redux'
+import ReduxThunk from 'redux-thunk'
+
+import Navigator from './Components/Navigator'
+import reducer from './redux/reducer'
+import { Provider } from 'react-redux';
+
+const store = createStore(reducer, applyMiddleware(ReduxThunk))
+
+fetchFonts = () => {
+  return Font.loadAsync(
+    {'open-sans': 
+  require('./fonts/OpenSans-Regular.ttf'),
+  'open-sans-bold': 
+  require('./fonts/OpenSans-Bold.ttf')}
+  )
+}
 
 export default function App() {
+  const [fontsLoaded, setFontsLoaded] = useState(false)
+
+  if(!fontsLoaded){
+    return (
+      <AppLoading 
+      startAsync ={fetchFonts}
+      onFinish={() => setFontsLoaded(true)}
+      onError = {console.warn}
+      />
+    )
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+    <Navigator />
+    </Provider>
   );
 }
 
