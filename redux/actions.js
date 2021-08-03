@@ -44,6 +44,7 @@ export const signup = (email, password) => {
           resData.idToken
         )
       )
+      dispatch(makeProfile(email, resData.localId))
     
   }
 }
@@ -70,7 +71,7 @@ export const login = (email, password) => {
         const errorResData = await response.json();
         const errorId = errorResData.error.message;
         
-        throw new Error(message);
+        throw new Error(errorId);
       }
 
       const resData = await response.json()
@@ -81,6 +82,8 @@ export const login = (email, password) => {
           resData.idToken
         )
       )
+
+      dispatch(getProfile(resData.localId))
     
   }
 }
@@ -127,3 +130,109 @@ catch(err) {
 }
   }}
 
+export const getProfile = (userid) => {
+  return async dispatch => {
+    const response = await fetch(`https://react-native-app-e1089-default-rtdb.firebaseio.com/profile/${userid}.json`)
+
+
+      if (!response.ok) {
+        const errorResData = await response.json();
+        const errorId = errorResData.error.message;
+        
+        throw new Error(message);
+      }
+
+      const resData = await response.json()
+
+      for(const key in resData){
+        dispatch(
+          {type: 'getProfile',
+          key: key, 
+          email: resData[key].email,
+          nomber: resData[key].nomber,
+          adress: resData[key].adress,
+          name: resData[key].name
+         })
+      }
+    
+  }
+}
+
+export const changeProfile = (key, userid, email, nomber, adress, name) => {
+  return async dispatch => {
+
+    const response = await fetch(
+      `https://react-native-app-e1089-default-rtdb.firebaseio.com/profile/${userid}/${key}.json`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email:email,
+          nomber: nomber,
+          adress: adress,
+          name: name
+        })
+      })
+
+
+      if (!response.ok) {
+        const errorResData = await response.json();
+        const errorId = errorResData.error.message;
+        
+        throw new Error(errorId);
+      }
+      
+      dispatch(
+        {type: 'getProfile', 
+        email: email,
+        nomber: nomber,
+        adress: adress,
+        name: name
+       }
+      )
+    
+  }
+}
+
+const makeProfile = (email, userid) => {
+  return async dispatch => {
+
+    const response = await fetch(
+      `https://react-native-app-e1089-default-rtdb.firebaseio.com/profile/${userid}.json`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          nomber: '+7',
+          adress: '',
+          name: '',
+
+        })
+      })
+
+
+      if (!response.ok){
+        const errorResData = await response.json();
+        const errorId = errorResData.error.message;
+        console.log(errorId)
+        throw new Error(response.message)
+      }
+
+      const resData = await response.json()
+
+      dispatch(
+        {type: 'getProfile', 
+        key: resData['name'],
+        email: email,
+        nomber: '+7',
+        adress: '',
+        name: ''
+       }
+      )
+  }
+}

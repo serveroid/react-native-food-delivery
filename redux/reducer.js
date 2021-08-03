@@ -23,6 +23,15 @@ const reducer = (state = initialState, action) => {
                 token: action.token,
                 userId: action.userId
             }
+        case 'getProfile':
+            return {
+                ...state,
+                key: action.key,
+                email: action.email,
+                nomber: action.nomber,
+                adress: action.adress,
+                name: action.name
+            }
         default:
             return state
     }
