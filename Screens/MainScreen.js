@@ -61,6 +61,13 @@ const MainScreen = props => {
       headerRight: (
         <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
           <Item
+            title='profile'
+            iconName='options'
+            onPress={()=>{
+              navData.navigation.navigate('Profile');
+            }}
+            />
+          <Item
             title="Cart"
             iconName='md-cart'
             onPress={() => {

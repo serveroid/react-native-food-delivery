@@ -14,9 +14,9 @@ const store = createStore(reducer, applyMiddleware(ReduxThunk))
 fetchFonts = () => {
   return Font.loadAsync(
     {'open-sans': 
-  require('./fonts/OpenSans-Regular.ttf'),
+      require('./fonts/OpenSans-Regular.ttf'),
   'open-sans-bold': 
-  require('./fonts/OpenSans-Bold.ttf')}
+      require('./fonts/OpenSans-Bold.ttf')}
   )
 }
 
