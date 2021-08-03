@@ -71,11 +71,12 @@ const UserProfile = () => {
             <View style = {styles.input}>
                 <Text style = {styles.text}>{"Nomber"}</Text> 
                 <TextInput
+                    keyboardType={'phone-pad'}
                     placeholder ='nomber'
                     id='nomber'
                     label='nomber'
                     required
-                    email
+                    tel
                     onChangeText={nomberChangerHundler}
                     value={nomberInput}
                 />
@@ -88,7 +89,7 @@ const UserProfile = () => {
                     id='adress'
                     label='adress'
                     required
-                    email
+                    street-address
                     onChangeText={adressChangerHundler}
                     value={adressInput}
                 />
@@ -101,7 +102,7 @@ const UserProfile = () => {
                     id='name'
                     label='name'
                     required
-                    email
+                    name
                     onChangeText={nameChangerHundler}
                     value={nameInput}
                 />
