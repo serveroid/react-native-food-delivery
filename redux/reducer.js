@@ -28,8 +28,8 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 key: action.key,
                 email: action.email,
-                nomber: action.nomber,
-                adress: action.adress,
+                number: action.number,
+                address: action.address,
                 name: action.name
             }
         default:
