@@ -149,8 +149,8 @@ export const getProfile = (userid) => {
           {type: 'getProfile',
           key: key, 
           email: resData[key].email,
-          nomber: resData[key].nomber,
-          adress: resData[key].adress,
+          number: resData[key].number,
+          address: resData[key].address,
           name: resData[key].name
          })
       }
@@ -158,7 +158,7 @@ export const getProfile = (userid) => {
   }
 }
 
-export const changeProfile = (key, userid, email, nomber, adress, name) => {
+export const changeProfile = (key, userid, email, number, address, name) => {
   return async dispatch => {
 
     const response = await fetch(
@@ -170,8 +170,8 @@ export const changeProfile = (key, userid, email, nomber, adress, name) => {
         },
         body: JSON.stringify({
           email:email,
-          nomber: nomber,
-          adress: adress,
+          number: number,
+          address: address,
           name: name
         })
       })
@@ -187,8 +187,8 @@ export const changeProfile = (key, userid, email, nomber, adress, name) => {
       dispatch(
         {type: 'getProfile', 
         email: email,
-        nomber: nomber,
-        adress: adress,
+        number: number,
+        address: address,
         name: name
        }
       )
@@ -208,8 +208,8 @@ const makeProfile = (email, userid) => {
         },
         body: JSON.stringify({
           email: email,
-          nomber: '+7',
-          adress: '',
+          number: '+7',
+          address: '',
           name: '',
 
         })
@@ -229,8 +229,8 @@ const makeProfile = (email, userid) => {
         {type: 'getProfile', 
         key: resData['name'],
         email: email,
-        nomber: '+7',
-        adress: '',
+        number: '+7',
+        address: '',
         name: ''
        }
       )

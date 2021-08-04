@@ -19,33 +19,56 @@ const UserProfile = () => {
 
     change = async () => {
         try {
-            await dispatch(changeProfile(key, userid, emailInput, nomberInput, adressInput, nameInput))
+            if (validateEmailInput && validateNumberInput) {
+                await dispatch(changeProfile(key, userid, emailInput, numberInput, addressInput, nameInput))
+            } else {
+                seterrMessage(true)
+            }
         } catch(err){
             console.log(err)
-
         }
     }
 
     const email = useSelector(state => state.email)
-    const nomber = useSelector(state => state.nomber)
-    const adress = useSelector(state => state.adress)
+    const number = useSelector(state => state.number)
+    const address = useSelector(state => state.address)
     const name = useSelector(state => state.name)
 
     const [emailInput, setemailInput] = useState(email)
-    const [nomberInput, setnomberInput] = useState(nomber)
-    const [adressInput, setadressInput] = useState(adress)
+    const [numberInput, setnumberInput] = useState(number)
+    const [addressInput, setaddressInput] = useState(address)
     const [nameInput, setnameInput] = useState(name)
+
+    const [validateEmailInput, setvalidateEmailInput] = useState(true)
+    const [validateNumberInput, setvalidateNumberInput] = useState(true)
+    const [errMessage, seterrMessage] = useState(false)
+
+    const validateEmail = () => {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        return re.test(String(emailInput).toLowerCase())
+    }
+
+    const validateNumber = () => {
+        const re = /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/
+        return re.test(String(numberInput).toLowerCase())
+    }
+
+    validateInput = () => {
+        validateEmail() ? setvalidateEmailInput(true) : setvalidateEmailInput(false)
+        validateNumber() ? setvalidateNumberInput(true) : setvalidateNumberInput(false)
+        if (validateEmailInput && validateNumberInput) seterrMessage(false)
+    }
 
     emailChangerHundler = (e) => {
         setemailInput(e)
     }
 
-    nomberChangerHundler = (e) => {
-        setnomberInput(e)
+    numberChangerHundler = (e) => {
+        setnumberInput(e)
     }
 
-    adressChangerHundler = (e) => {
-        setadressInput(e)
+    addressChangerHundler = (e) => {
+        setaddressInput(e)
     }
 
     nameChangerHundler = (e) => {
@@ -54,10 +77,14 @@ const UserProfile = () => {
 
     return(
         <View style={styles.container}>
-            
-            <View style = {styles.input}>
+
+{errMessage && <Text style={{position: 'absolute', fontSize: 19, fontWeight: "bold", color: "red", padding: 10}}>{"Данные введены неверно"}</Text>}
+
+            <View style = {styles.form}>
                 <Text style = {styles.text}>{"Email"}</Text>
                 <TextInput
+                    style = {validateEmailInput ? styles.text : styles.validateErr}
+                    keyboardType={'email-address'}
                     placeholder ='email'
                     id='email'
                     label='E-Mail'
@@ -65,43 +92,47 @@ const UserProfile = () => {
                     email
                     onChangeText={emailChangerHundler}
                     value={emailInput}
+                    onKeyPress = {validateInput}
                 />
             </View>
 
-            <View style = {styles.input}>
-                <Text style = {styles.text}>{"Nomber"}</Text> 
+            <View style = {styles.form}>
+                <Text style = {styles.text}>{"number"}</Text> 
                 <TextInput
-                    placeholder ='nomber'
-                    id='nomber'
-                    label='nomber'
+                    style = {validateNumberInput ? styles.text : styles.validateErr}
+                    keyboardType={'phone-pad'}
+                    placeholder ='number'
+                    id='number'
+                    label='number'
                     required
-                    email
-                    onChangeText={nomberChangerHundler}
-                    value={nomberInput}
+                    num
+                    onChangeText={numberChangerHundler}
+                    value={numberInput}
+                    onKeyPress = {validateInput}
                 />
             </View>
 
-            <View style = {styles.input}>
-                <Text style = {styles.text}>{"Adress"}</Text> 
+            <View style = {styles.form}>
+                <Text style = {styles.text}>{"address"}</Text> 
                 <TextInput
-                    placeholder ='adress'
-                    id='adress'
-                    label='adress'
+                    placeholder ='address'
+                    id='address'
+                    label='address'
                     required
-                    email
-                    onChangeText={adressChangerHundler}
-                    value={adressInput}
+                    address
+                    onChangeText={addressChangerHundler}
+                    value={addressInput}
                 />
             </View>
 
-            <View style = {styles.input}>
+            <View style = {styles.form}>
                 <Text style = {styles.text}>{"Name"}</Text> 
                 <TextInput
                     placeholder ='name'
                     id='name'
                     label='name'
                     required
-                    email
+                    name
                     onChangeText={nameChangerHundler}
                     value={nameInput}
                 />
@@ -116,12 +147,18 @@ const styles = StyleSheet.create({
     container: {
         padding: 50
     },
-    input: {
+    form: {
         padding: 10,
-        borderWidth : 1
+        borderWidth : 2
     },
     text: {
         fontWeight: "bold"
+    },
+    text: {
+        color: 'black'
+    },
+    validateErr: {
+        color: 'red'
     }
 })
 
