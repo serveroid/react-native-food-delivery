@@ -186,6 +186,7 @@ export const changeProfile = (key, userid, email, number, address, name) => {
       
       dispatch(
         {type: 'getProfile', 
+        key: key,
         email: email,
         number: number,
         address: address,

@@ -17,9 +17,21 @@ const UserProfile = () => {
     const userid = useSelector(state => state.userId)
     const key = useSelector(state => state.key)
 
+    const validateEmail = () => {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        return re.test(String(emailInput).toLowerCase())
+    }
+
+    const validateNumber = () => {
+        const re = /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/
+        return re.test(String(numberInput).toLowerCase())
+    }
+
     change = async () => {
         try {
-            if (validateEmailInput && validateNumberInput) {
+            if (validateEmail() || validateNumber()) seterrMessage(false)
+
+            if (validateEmail() && validateNumber()) {
                 await dispatch(changeProfile(key, userid, emailInput, numberInput, addressInput, nameInput))
             } else {
                 seterrMessage(true)
@@ -39,25 +51,7 @@ const UserProfile = () => {
     const [addressInput, setaddressInput] = useState(address)
     const [nameInput, setnameInput] = useState(name)
 
-    const [validateEmailInput, setvalidateEmailInput] = useState(true)
-    const [validateNumberInput, setvalidateNumberInput] = useState(true)
     const [errMessage, seterrMessage] = useState(false)
-
-    const validateEmail = () => {
-        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        return re.test(String(emailInput).toLowerCase())
-    }
-
-    const validateNumber = () => {
-        const re = /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/
-        return re.test(String(numberInput).toLowerCase())
-    }
-
-    validateInput = () => {
-        validateEmail() ? setvalidateEmailInput(true) : setvalidateEmailInput(false)
-        validateNumber() ? setvalidateNumberInput(true) : setvalidateNumberInput(false)
-        if (validateEmailInput && validateNumberInput) seterrMessage(false)
-    }
 
     emailChangerHundler = (e) => {
         setemailInput(e)
@@ -78,12 +72,12 @@ const UserProfile = () => {
     return(
         <View style={styles.container}>
 
-{errMessage && <Text style={{position: 'absolute', fontSize: 19, fontWeight: "bold", color: "red", padding: 10}}>{"Данные введены неверно"}</Text>}
+            {errMessage && <Text style={{position: 'absolute', fontSize: 19, fontWeight: "bold", color: "red", padding: 10}}>{"Данные введены неверно"}</Text>}
 
             <View style = {styles.form}>
                 <Text style = {styles.text}>{"Email"}</Text>
                 <TextInput
-                    style = {validateEmailInput ? styles.text : styles.validateErr}
+                    style = {validateEmail() ? styles.text : styles.validateErr}
                     keyboardType={'email-address'}
                     placeholder ='email'
                     id='email'
@@ -92,14 +86,13 @@ const UserProfile = () => {
                     email
                     onChangeText={emailChangerHundler}
                     value={emailInput}
-                    onKeyPress = {validateInput}
                 />
             </View>
 
             <View style = {styles.form}>
                 <Text style = {styles.text}>{"number"}</Text> 
                 <TextInput
-                    style = {validateNumberInput ? styles.text : styles.validateErr}
+                    style = {validateNumber() ? styles.text : styles.validateErr}
                     keyboardType={'phone-pad'}
                     placeholder ='number'
                     id='number'
@@ -108,7 +101,6 @@ const UserProfile = () => {
                     num
                     onChangeText={numberChangerHundler}
                     value={numberInput}
-                    onKeyPress = {validateInput}
                 />
             </View>
 
