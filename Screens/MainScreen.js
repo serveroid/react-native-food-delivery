@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, Button } fro
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { Ionicons } from '@expo/vector-icons';
 import { useSelector, useDispatch } from 'react-redux';
+import { AsyncStorage } from 'react-native';
 
 import { getCategories } from '../redux/actions';
 import CustomHeaderButton from '../Components/HeaderButton';
@@ -10,7 +11,6 @@ import CustomHeaderButton from '../Components/HeaderButton';
 const MainScreen = props => {
     const categories = useSelector(state => state.categories)
     const dispatch = useDispatch();
-
 
     const loadCategories = useCallback(async () => {
         try {
@@ -55,6 +55,12 @@ const MainScreen = props => {
   }
 
   MainScreen.navigationOptions = navData => {
+
+    logout = async () => {
+      await AsyncStorage.setItem('refreshToken', '')
+      navData.navigation.navigate('Auth')
+    }
+
     return {
       headerTitle: 'Главное меню',
       
@@ -73,6 +79,11 @@ const MainScreen = props => {
             onPress={() => {
               navData.navigation.navigate('ShopCart');
             }}
+          />
+          <Item
+            title="LogOut"
+            iconName='log-out'
+            onPress={logout}
           />
         </HeaderButtons>
       )

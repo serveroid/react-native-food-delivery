@@ -77,7 +77,7 @@ const UserProfile = () => {
             <View style = {styles.form}>
                 <Text style = {styles.text}>{"Email"}</Text>
                 <TextInput
-                    style = {validateEmail() ? styles.text : styles.validateErr}
+                    style = {validateEmail() ? styles.textInput : styles.validateErr}
                     keyboardType={'email-address'}
                     placeholder ='email'
                     id='email'
@@ -92,7 +92,7 @@ const UserProfile = () => {
             <View style = {styles.form}>
                 <Text style = {styles.text}>{"number"}</Text> 
                 <TextInput
-                    style = {validateNumber() ? styles.text : styles.validateErr}
+                    style = {validateNumber() ? styles.textInput : styles.validateErr}
                     keyboardType={'phone-pad'}
                     placeholder ='number'
                     id='number'
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     text: {
         fontWeight: "bold"
     },
-    text: {
+    textInput: {
         color: 'black'
     },
     validateErr: {

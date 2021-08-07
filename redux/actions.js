@@ -1,3 +1,5 @@
+import { AsyncStorage } from 'react-native';
+
 import Category from "../Models/Category"
 
 export const addToShopCart = (payload) => ({
@@ -82,9 +84,45 @@ export const login = (email, password) => {
           resData.idToken
         )
       )
-
+      await AsyncStorage.setItem('refreshToken', resData.refreshToken)
       dispatch(getProfile(resData.localId))
     
+  }
+}
+
+export const autoLogin = (refreshToken) => {
+  return async dispatch => {
+    const response = await fetch(
+      "https://securetoken.googleapis.com/v1/token?key=AIzaSyAQksDqg5_AsG1P2LER6bB7aScPAIwGljQ",
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken
+        })
+      })
+
+
+      if (!response.ok) {
+        const errorResData = await response.json();
+        const errorId = errorResData.error.message;
+
+        throw new Error(errorId);
+      }
+
+      const resData = await response.json()
+      
+      dispatch(
+        authenticate(
+          resData.user_id,
+          resData.id_token
+        )
+      )
+      await AsyncStorage.setItem('refreshToken', resData.refresh_token)
+      dispatch(getProfile(resData.user_id))
   }
 }
 
