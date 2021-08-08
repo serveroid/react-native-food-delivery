@@ -32,6 +32,8 @@ const reducer = (state = initialState, action) => {
                 address: action.address,
                 name: action.name
             }
+        case 'clear':
+            return initialState
         default:
             return state
     }

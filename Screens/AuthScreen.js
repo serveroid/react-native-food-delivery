@@ -20,8 +20,11 @@ const AuthScreen = props => {
             if(refreshToken) {
                 await dispatch(autoLogin(refreshToken))
                 props.navigation.navigate('Delivery')
+            } else {
+                dispatch({type: 'clear'})
             }
         } catch(err){
+            dispatch({type: 'clear'})
             console.log(err.message)
         }
     }
